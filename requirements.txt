@@ -1,0 +1,4 @@
+sqlalchemy
+Flask
+flask-restplus
+flask_swagger_ui
