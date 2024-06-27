@@ -11,3 +11,26 @@ class Course(Base):
     updated_on: Mapped[str] = mapped_column(DateTime(timezone=True), server_default=func.now())
     # posted_by: Mapped[int] = mapped_column(ForeignKey(""))
     # user: Mapped["User"] = relationship(back_populates="")
+
+    def __repr__(self):
+        return f"id: {self.id}; name: {self.name}"
+
+
+"""
+Select
+Select with filter
+Select where
+Select filter
+Select specific column
+
+
+Session
+Session dirty
+Delete
+Flush
+Rollback
+
+
+relationship
+
+"""
