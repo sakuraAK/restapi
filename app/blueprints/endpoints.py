@@ -6,10 +6,6 @@ from sqlalchemy import select
 
 endpoints_blueprint = Blueprint('api', __name__, url_prefix='/api')
 
-list_of_courses = [
-    {"id": 1, "name": "Course A"},
-    {"id": 2, "name": "Course B"},
-]
 @endpoints_blueprint.route('/courses', methods=['GET','POST'])
 def get_courses():
     if request.method == 'GET':

@@ -41,27 +41,6 @@ class Base(DeclarativeBase):
             ret_data[c] = getattr(self, c)
         return ret_data
 
-# class User(Base):
-#     __tablename__="user"
-#     id: Mapped[int] = mapped_column(primary_key=True)
-#     name: Mapped[str] = mapped_column(String)
-#     email: Mapped[str] = mapped_column(String)
-#     addresses: Mapped[List["Address"]] = relationship(back_populates="user")
-#
-#     def __repr__(self):
-#         return f"name: {self.name}; email: {self.email}"
-
-# class Address(Base):
-#     __tablename__ = "address"
-#     id: Mapped[int] = mapped_column(primary_key=True)
-#     street: Mapped[str] = mapped_column(String)
-#     number: Mapped[int] = mapped_column(Integer)
-#     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
-#     user: Mapped["User"] = relationship(back_populates="addresses")
-#
-#     def __repr__(self):
-#         return f"{self.street} street number {self.number}"
-
 
 semester_student = Table(
     "semester_student",
