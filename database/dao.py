@@ -6,31 +6,6 @@ from sqlalchemy.orm import Mapped, mapped_column, Session, relationship, Declara
 from sqlalchemy.sql import func
 import os
 
-"""
-Setup
-
-Entities
-
-Session
-Session dirty
-Delete
-Flush
-Rollback
-
-Select
-Select with filter
-Select where
-Select filter
-Select specific column
-
-
-
-
-relationship
-
-"""
-
-
 
 class Base(DeclarativeBase):
     def to_dict(self):
@@ -42,11 +17,25 @@ class Base(DeclarativeBase):
         return ret_data
 
 
-semester_student = Table(
-    "semester_student",
+course_user = Table(
+    "course_user",
+    Base.metadata,
+    Column("left_id", ForeignKey("course.id"), primary_key=True),
+    Column("right_id", ForeignKey("user.id"), primary_key=True),
+)
+
+semester_course = Table(
+    "semester_course",
     Base.metadata,
     Column("left_id", ForeignKey("semester.id"), primary_key=True),
-    Column("right_id", ForeignKey("student.id"), primary_key=True),
+    Column("right_id", ForeignKey("course.id"), primary_key=True),
+)
+
+program_course = Table(
+    "program_course",
+    Base.metadata,
+    Column("left_id", ForeignKey("program.id"), primary_key=True),
+    Column("right_id", ForeignKey("course.id"), primary_key=True),
 )
 
 class Semester(Base):
@@ -55,18 +44,43 @@ class Semester(Base):
     season: Mapped[str] = mapped_column(String)
     start_date: Mapped[str] = mapped_column(String)
     end_date: Mapped[str] = mapped_column(String)
-    students: Mapped[List["Student"]] = relationship(secondary=semester_student, back_populates="semesters")
+    courses: Mapped[List["Course"]] = relationship(secondary=semester_course, back_populates="semesters")
 
 
-class Student(Base):
-    __tablename__ = "student"
+class User(Base):
+    __tablename__ = "user"
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String)
-    semesters: Mapped[List["Semester"]] = relationship(secondary=semester_student, back_populates="students")
+    role: Mapped[str] = mapped_column(String)
+    program_id: Mapped[int] = mapped_column(ForeignKey("program.id"))
+    program: Mapped["Program"] = relationship(back_populates="users")
+    active: Mapped[bool] = mapped_column(Boolean)
+    courses: Mapped[List["Course"]] = relationship(secondary=course_user, back_populates="users")
 
+class Course(Base):
+    __tablename__ = "course"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String)
+    description: Mapped[str] = mapped_column(String)
+    total_hours: Mapped[int] = mapped_column(Integer)
+    users: Mapped[List["User"]] = relationship(secondary=course_user, back_populates="courses")
+    semesters: Mapped[List["Semester"]] = relationship(secondary=semester_course, back_populates="courses")
+    programs: Mapped[List["Program"]] = relationship(secondary=program_course, back_populates="courses")
+
+class Program(Base):
+    __tablename__ = "program"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String)
+    description: Mapped[str] = mapped_column(String)
+    total_hours: Mapped[int] = mapped_column(Integer)
+    users: Mapped[List["User"]] = relationship(back_populates="program")
+    courses: Mapped[List["Course"]] = relationship(secondary=program_course, back_populates="programs")
+
+def db_reset():
+    Base.metadata.drop_all(engine)
 
 engine = create_engine("sqlite:///app.db")
 session = Session(engine)
 
-if not os.path.exists('app1.db'):
+if not os.path.exists('app.db'):
     Base.metadata.create_all(engine)
