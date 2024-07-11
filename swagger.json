@@ -1,0 +1,247 @@
+{
+    "swagger": "2.0",
+    "info": {
+      "title": "Demo API",
+      "version": "1.0.0"
+    },
+    "basePath": "/api",
+    "paths": {
+      "/users": {
+        "post": {
+          "description": "Add new user",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "user data",
+              "in": "body",
+              "description": "JSON data for the api",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/UserData"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "User added"
+            },
+            "400": {
+              "description": "Invalid request data"
+            }
+          }
+        },
+        "get": {
+          "description": "Get users",
+          "produces": [
+            "application/json"
+          ],
+          "responses": {
+            "200": {
+              "description": "Users list",
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/UserData"
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid request data"
+            }
+          }
+        }
+      },
+      "/users/{user_id}": {
+        "delete": {
+          "description": "Delete user",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "user_id",
+              "in": "path",
+              "description": "User id",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "User deleted"
+            },
+            "404": {
+              "description": "User does not exist"
+            }
+          }
+        },
+        "get": {
+          "description": "Get user by id",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "user_id",
+              "in": "path",
+              "description": "User id",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Return user data",
+              "schema": {
+                 "$ref": "#/definitions/UserData"
+              }
+            },
+            "404": {
+              "description": "User does not exist"
+            }
+          }
+        }
+      },
+      "/programs-courses/{program_id}/{course_id}": {
+          "post":{
+            "description": "Assign course to a program",
+            "produces": [
+              "application/json"
+            ],
+            "parameters": [
+              {
+                "name": "program_id",
+                "in": "path",
+                "description": "Program id",
+                "required": true,
+                "schema": {
+                  "type": "integer"
+                }
+              },
+              {
+                "name": "course_id",
+                "in": "path",
+                "description": "Course id",
+                "required": true,
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            ],
+            "responses": {
+            "200": {
+              "description": "Course assigned to program"
+            },
+            "404": {
+              "description": "Program or course does not exist"
+            }
+          }
+          }
+      },
+      "/courses": {
+        "post": {
+          "description": "Add new course",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "course data",
+              "in": "body",
+              "description": "JSON data for the api",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/CourseData"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Course added"
+            },
+            "400": {
+              "description": "Invalid request data"
+            }
+          }
+        },
+        "get": {
+          "description": "Get courses",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "filter",
+              "in": "query",
+              "description": "Filter the result",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Course list",
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/CourseData"
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid request data"
+            }
+          }
+        }
+      }
+    },
+    "definitions": {
+      "UserData": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "program_id": {
+            "type": "integer"
+          },
+          "active": {
+            "type": "boolean"
+          }
+        }
+      },
+      "CourseData": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "total_hours": {
+            "type": "integer"
+          }
+        }
+      }
+    }
+}
