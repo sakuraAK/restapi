@@ -1,4 +1,4 @@
-from flask import Blueprint, request, json
+from flask import Blueprint, request, json, Response
 from sqlalchemy import select, or_
 from database import Course, session, User, Program, Semester
 
@@ -90,6 +90,8 @@ def programs():
         new_program.total_hours = request.json["total_hours"]
         session.add(new_program)
         session.commit()
+        # resp = Response(new_program.to_dict(), 200)
+        # resp.headers['Access-Control-Allow-Origin'] = 'http://localhost:5173'
         return new_program.to_dict(), 200
 
 @endpoints_blueprint.route('/semesters', methods=['GET','POST'])
@@ -179,3 +181,11 @@ def register_teacher(teacher_id, semester_id, course_id):
         return "Something went wrong", 500
 
 
+@endpoints_blueprint.route('/programs/<int:id>', methods=['DELETE'])
+def delete_program(id):
+    program = session.get(Program, id)
+    if not program:
+        return "Program does not exist", 404
+    session.delete(program)
+    session.commit()
+    return {"result": "Program removed"}, 200

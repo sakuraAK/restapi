@@ -2,3 +2,4 @@ sqlalchemy
 Flask==2.3.2
 flask-restplus
 flask_swagger_ui
+flask-cors
