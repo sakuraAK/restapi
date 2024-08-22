@@ -20,12 +20,21 @@ def courses():
 
         return result_list, 200
     else:
-        new_course = Course()
-        new_course.name = request.json["name"]
-        new_course.description = request.json["description"]
-        new_course.total_hours = request.json["total_hours"]
-        session.add(new_course)
-        session.commit()
+        new_course = None
+        course_name = request.json["name"]
+        stmt = select(Course).filter(Course.name == course_name)
+        result = session.execute(stmt).scalars().first()
+
+        if result:
+            new_course = result
+        else:
+            new_course = Course()
+            new_course.name = request.json["name"]
+            new_course.description = request.json["description"]
+            new_course.total_hours = request.json["total_hours"]
+            session.add(new_course)
+            session.commit()
+
         return new_course.to_dict(), 200
 @endpoints_blueprint.route('/users', methods=['GET','POST', 'PUT'])
 def users():
