@@ -96,7 +96,7 @@ def programs():
         new_program = Program()
         new_program.name = request.json["name"]
         new_program.description = request.json["description"]
-        new_program.total_hours = request.json["total_hours"]
+        new_program.total_hours = request.json["totalHours"]
         session.add(new_program)
         session.commit()
         # resp = Response(new_program.to_dict(), 200)
